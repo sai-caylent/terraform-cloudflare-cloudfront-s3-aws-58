@@ -17,10 +17,10 @@
 
 ## Usage
 ```terraform
-module "this" {
-  source      = "app.terraform.io/negotiatus/template/module"
-  version     = "0.0.1"
-  secret_name = var.secret_name
+module "cf_with_s3" {
+    source = "../.."
+    domain_name = "lab.sai.com"
+   
 }
 ```
 
@@ -62,8 +62,10 @@ gh release create v0.0.5 --target main
 ## Complete
 ```hcl
 module "this" {
-  source      = "../../"
-  secret_name = var.secret_name
+    source = "../.."
+    domain_name = "lab.sai.com"
+    comment_cdn = "proxy cdn for f45 cloudflare"
+    price_class = "PriceClass_100"
 }
 ```
 
@@ -77,14 +79,19 @@ module "this" {
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_secret_name"></a> [secret\_name](#input\_secret\_name) | The name of the secret stored as a parameter | `string` | n/a | yes |
+| <a name="input_secret_name"></a> [domain_name](#input\_secret\_name) | Name for the bucket and name for the certificate  | `string` | n/a | yes |
+| <a name="input_secret_name"></a> [is_ipv6_enabled](#input\_secret\_name) | Enable ipv6 on CDN | `string` | n/a | yes |
+| <a name="input_secret_name"></a> [price_class](#input\_secret\_name) | The price class for this distribution. One of PriceClass_All, PriceClass_200, PriceClass_100. Default is PriceClass_All  | `string` | n/a | yes |
+| <a name="input_secret_name"></a> [default_root_object](#input\_secret\_name) | "The object that you want CloudFront to return (for example, index.html) when an end user requests the root URL. | `string` | n/a | yes |
 ## Outputs
 
 | Name | Description |
 |------|-------------|
-| <a name="output_secret_name"></a> [secret\_name](#output\_secret\_name) | n/a |
+| <a name="output_secret_name"></a> [cf_domain_name](#output\_secret\_name) | Domain name of the cloudfront distribution |
+| <a name="output_secret_name"></a> [bucket_name](#output\_secret\_name) | S3 bucket name |
 ## Resources
 
-- resource.aws_ssm_parameter.secret (main.tf#8)
-- resource.random_password.password (main.tf#1)
+- resource.aws_s3_bucket.this(main.tf#20)
+- resource.aws_cloudfront_distribution.this (cdn.tf#11)
+- resource.aws_acm_certificate.this(main.tf#44)
 <!-- END_TF_DOCS -->
